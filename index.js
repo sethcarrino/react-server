@@ -5,4 +5,8 @@ app.get('/', (req, res) => {
 	res.send({ hi: 'there' });
 });
 
-app.listen(5000);
+// writing a variable for handling heroku port environment. 
+// setup || to listen if environment is not avaible and for development on separate port
+// ex. 5000
+const PORT = process.env.PORT || 5000;
+app.listen(PORT);
