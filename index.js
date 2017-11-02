@@ -1,7 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const keys = require('./config/keys');
+
+// the order of these require statements is correct. will load in right order
+require('./models/User');
 require('./services/passport');
+
 
 mongoose.connect(keys.mongoURI);
 
