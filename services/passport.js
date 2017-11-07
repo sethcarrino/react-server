@@ -6,6 +6,18 @@ const keys = require('../config/keys');
 // pulling in model class for users
 const User = mongoose.model('users');
 
+// add identifying piece of info to cookie
+passport.serializeUser((user, done) => {
+	done(null, user.id);
+});
+
+passport.deserializeUser((id, done) => {
+	User.findById(id)
+		.then(user => {
+			done(null, user);
+		});
+});
+
 // this passport service will authenticate user through google oAuth
 passport.use(new GoogleStrategy({
 	clientID: keys.googleClientID,

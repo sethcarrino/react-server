@@ -1,5 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
+// give us access to using cookies
+const cookieSession = require('cookie-session');
+const passport = require('passport');
 const keys = require('./config/keys');
 
 // the order of these require statements is correct. will load in right order
@@ -10,6 +13,21 @@ require('./services/passport');
 mongoose.connect(keys.mongoURI);
 
 const app = express();
+
+// making use of cookie session
+app.use(
+	cookieSession({
+		// how long cookie can last before expiring
+		// set for 30 days
+		maxAge: 30 * 24 * 60 * 60 * 1000,
+		// used to encrypt cookie
+		keys: [keys.cookieKey]
+	})
+);
+
+// telling passport to use cookies for authentication
+app.use(passport.initialize());
+app.use(passport.session());
 
 // require authRoute - shorthand from const authRoutes = require();
 // authRoutes(app);
