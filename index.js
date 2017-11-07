@@ -15,6 +15,7 @@ mongoose.connect(keys.mongoURI);
 const app = express();
 
 // making use of cookie session
+// wiring up middleware
 app.use(
 	cookieSession({
 		// how long cookie can last before expiring
