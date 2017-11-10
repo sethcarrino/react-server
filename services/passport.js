@@ -26,7 +26,7 @@ passport.use(new GoogleStrategy({
 	// if our request runs through proxy just deal with it
 	proxy: true
 	}, 
-	(accessToken, refreshToken, profile, done) => {
+	async (accessToken, refreshToken, profile, done) => {
 		// console logging google profile details
 		// console.log('accessToken', accessToken);
 		// console.log('refreshToken', refreshToken);
@@ -34,22 +34,19 @@ passport.use(new GoogleStrategy({
 
 		// mongoose query to find if a user matches id
 		// returns a promise
-		User.findOne({ googleId: profile.id })
-			.then((existingUser) => {
-				if (existingUser) {
-					// we already have a record with given profile ID
-					// first argument is error object
-					// second object is user record
-					done(null, existingUser);
-				} else {
-					// we don't have user record and create a new one
-					// .save() will take instance and save record
-					new User({ googleId: profile.id })
-						.save()
-						.then(user => done(null, user));
-				}
-			});
-
-		
-	})
+		const existingUser = await User.findOne({ googleId: profile.id });
+			
+		if (existingUser) {
+			// we already have a record with given profile ID
+			// first argument is error object
+			// second object is user record
+			return done(null, existingUser);
+		} 
+			// we don't have user record and create a new one
+			// .save() will take instance and save record
+			const user = await new User({ googleId: profile.id }).save();
+			done(null, user);
+			
+		}
+	)
 );
